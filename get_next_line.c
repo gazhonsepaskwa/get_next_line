@@ -1,29 +1,43 @@
 #include "get_next_line.h"
 
-static int	find_nl(str)
+static int	find_nl(char *str)
 {
 	while (*str)
 	{
 		if (*str == '\n')
 			return (1);
-		*str++;
+		(*str)++;
 
 	}
 	return(0);
 }
 
-static int	get_trailing(char *str, int lenstr, char *ret)
+static char	*get_trailing(char *str, int lenstr)
 {
 	int	i;
 	int	j;
+	char	*ret;
 
 	i = 0;
+	j = 0;
 	while (str[i] != '\n' || i < lenstr)
 		i++;
 	i++;
+	ret = malloc(lenstr - i);
 	while(i <= lenstr)
 		ret[j++] = str[i++];
 	ret[i] = 0;
+	return (ret);
+}
+
+int	ft_strlen(char *str)
+{
+	int i;
+	if (!str)
+		return (0);
+	i = 0;
+	while (str[i])
+		i++;
 	return (i);
 }
 
@@ -43,17 +57,19 @@ static char	*ft_add_to_str(char *mas, char *s2, int lens2)
 		ret[j++] = s2[i++];
 	ret[j] = 0;
 	free(mas);	
+	return (ret);
 }
 
 char	*get_next_line(int fd)
 {
-	char		*buffer[BUFFER_SIZE];
-	char		*byte_read;
+	char		buffer[BUFFER_SIZE];
+	int		byte_read;
 	char		*out;
-	static char	*rest_from_last[50000]; // change this ?
+	static char	*rest_from_last = NULL;
 	static int	after_nl;
 
-	if (rest_from_last != NULL)
+	out = NULL;
+	if (rest_from_last)
 		out = ft_add_to_str(out, rest_from_last, (after_nl - 1));
 	buffer[0] = 0;
 	while (!find_nl(buffer))
@@ -62,5 +78,6 @@ char	*get_next_line(int fd)
 		out = ft_add_to_str(out, buffer, byte_read);
 		// add something for the null terminator ?
 	}
-	after_nl = get_trailing(buffer, byte_read, rest_from_last);
+	rest_from_last = get_trailing(buffer, byte_read);
+	return (out);
 }
