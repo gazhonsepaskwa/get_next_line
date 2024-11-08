@@ -10,4 +10,14 @@ int main()
 	fd = open("foo.txt", O_RDONLY);
 	ret = get_next_line(fd);
 	printf("%s", ret);
+	ret = get_next_line(fd);
+	printf("%s", ret);
+	ret = get_next_line(fd);
+	printf("%s", ret);
+	ret = get_next_line(fd);
+	printf("%s", ret);
+	ret = get_next_line(fd);
+	printf("%s", ret);
+	ret = get_next_line(fd);
+	printf("%s", ret);
 }
